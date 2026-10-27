@@ -167,12 +167,15 @@ console.log('PASS: commission allocation, cent rounding, preserved legacy, reass
 assert.equal(vm.runInContext('calculateSale(40000000,2,a,a,1,1).commission',context),800000,'Same person receives both full 1% rates');
 assert.equal(vm.runInContext('calculateSale(40000000,2,a,b,1,1).allocations[0].amount',context),400000,'Each person receives the full informed rate');
 assert.equal(vm.runInContext('calculateSale(40000000,0,a,a,1,1).commission',context),53333,'Parcelinha pays both participations to the same person');
+assert.equal(vm.runInContext('calculateSale(40000000,0,a,a,1,1,6).commission',context),320000,'Six embedded installments repeat the Parcelinha commission six times');
+assert.equal(vm.runInContext('calculateSale(40000000,0,a,b,1,1,12).commission',context),640000,'Twelve embedded installments apply to both participants');
 assert.equal(vm.runInContext('calculateSale(40000000,1,a,b,0.8,1).commission',context),720000,'Different role rates are applied in full');
 assert.equal(vm.runInContext('calculateSale(35000000,1,a,a,0.4,0.4).commission',context),280000,'350k with 0.4% plus 0.4% = 2.8k');
 assert.equal(vm.runInContext("state.people.find(p=>p.id===a).commissionRole='PJ sem garantia';rateFor(a,2)",context),1);
 assert.equal(vm.runInContext('rateFor(a,1)',context),0.8);
 assert.equal(vm.runInContext('rateFor(b,2)',context),null,'Unknown role needs manual rate');
 assert.equal(vm.runInContext('rateFor(b,0)',context),0.8/12,'Parcelinha same for all roles');
+assert.throws(()=>vm.runInContext('validateSales({...state,saleEntries:[{...sale,installments:13}]})',context));
 console.log('PASS: role rates, exact Parcelinha calculation, summed same-person rates and full differing-role rates');
 vm.runInContext(`let deletionRecord={fare:6,rides:2,days:[5],paid:{1:true},sales:[0,0,0],commission:0};prepare(deletionRecord,'2026-10');deletionRecord.transfers.push({id:'active-delete',week:1,amount:20000,date:'2026-10-18',note:'',legacy:false,voided:false},{id:'cancelled-delete',week:1,amount:10000,date:'2026-10-18',note:'',legacy:false,voided:true});syncPayments(deletionRecord);deleteTransfer(deletionRecord,'active-delete');`,context);
 assert.equal(vm.runInContext('deletionRecord.payments[1]',context),1200,'Deletion recalculates paid balance');
