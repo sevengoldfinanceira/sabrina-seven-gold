@@ -58,7 +58,21 @@ $('#export').onclick=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{ty
 function resetAllVT(){state.people.forEach(p=>record(p.id));for(const r of Object.values(state.records)){Object.assign(r,{days:[],paid:{},attendance:{},costs:{},payments:{},transfers:[],planned:[],vtResetEmpty:true});}paymentContext=null;}
 document.querySelector('#reset-vt').onclick=()=>{if(!confirm('Excluir definitivamente todos os pagamentos e presenças de VT, de todos os meses e pessoas? Passagens, Pix, vendas, comissões e vales serão mantidos.'))return;resetAllVT();save();render();toast('VT de toda a equipe zerado. Histórico removido.');};
 
+function setupSidebarLayout(){
+  const sidebar=document.querySelector('aside'),pageHeader=document.querySelector('main>header'),tabs=document.querySelector('main>.main-tabs'),toolbar=document.querySelector('main>.toolbar');
+  if(!sidebar||!pageHeader||!tabs||!toolbar)return;
+  const controls=document.createElement('div');controls.className='sidebar-controls';controls.append(pageHeader,tabs,toolbar);sidebar.querySelector('.brand').after(controls);
+  const toggle=document.createElement('button');toggle.className='mobile-menu-toggle';toggle.type='button';toggle.setAttribute('aria-label','Abrir menu');toggle.setAttribute('aria-expanded','false');toggle.innerHTML='<span></span><span></span><span></span>';
+  const backdrop=document.createElement('button');backdrop.className='sidebar-backdrop';backdrop.type='button';backdrop.setAttribute('aria-label','Fechar menu');document.body.prepend(backdrop,toggle);
+  const closeMenu=()=>{document.body.classList.remove('menu-open');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Abrir menu');};
+  toggle.onclick=()=>{const open=document.body.classList.toggle('menu-open');toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Fechar menu':'Abrir menu');};
+  backdrop.onclick=closeMenu;
+  tabs.addEventListener('click',event=>{if(event.target.closest('button'))closeMenu();});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape')closeMenu();});
+}
+
 if(typeof window!=='undefined'){
+  setupSidebarLayout();
   const sdk=document.createElement('script');
   sdk.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
   sdk.onload=()=>{const integration=document.createElement('script');integration.src='cloud.js?v=supabase1';document.body.append(integration);};
