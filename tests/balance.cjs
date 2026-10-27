@@ -161,6 +161,8 @@ assert.equal(vm.runInContext('putSale({...sale,voided:true})',context),false,'Se
 vm.runInContext('delete state.records["2027-01:"+b].settlement;putSale({...sale,date:"2027-02-12"})',context);
 assert.equal(vm.runInContext('state.records["2027-01:"+b].commission',context),0,'Moved month removes old commission');
 assert.equal(vm.runInContext('state.records["2027-02:"+a].commission',context),100.01,'Moved month credits new month');
+assert.equal(vm.runInContext("$('#month').value='2027-02';salesCommissionFor(a)",context),10001,'Seller filter sums commission when the person brought and closed');
+assert.equal(vm.runInContext('salesCommissionFor(c)',context),0,'Seller filter ignores sales without participation');
 assert.equal(vm.runInContext('validate(JSON.parse(JSON.stringify(state))).saleEntries.length',context),1,'Sale backup roundtrip');
 assert.throws(()=>vm.runInContext('validateSales({...state,saleEntries:[{...sale,originator:"missing"}]})',context));
 console.log('PASS: commission allocation, cent rounding, preserved legacy, reassignment, cancellation, settlement locks, month isolation and backup');
