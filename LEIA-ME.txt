@@ -1,0 +1,29 @@
+SEVEN GOLD — projeto para edição
+
+1. Extraia este ZIP no outro computador.
+2. Abra a pasta Seven-Gold como projeto local no Codex.
+3. Os arquivos editáveis do site estão em dist/ (HTML, CSS e JavaScript).
+
+Visualização local (se Python 3 estiver instalado):
+  python3 -m http.server 4189 --directory dist
+Abra http://localhost:4189
+No Windows, pode usar: py -m http.server 4189 --directory dist
+
+Testes (se Node.js estiver instalado):
+  node tests/balance.cjs
+
+DADOS FINANCEIROS
+Os dados cadastrados ficam no navegador, não nestes arquivos.
+No computador original, use “Exportar backup” no sistema.
+Transfira também esse arquivo e use “Importar backup” no navegador do outro computador.
+O ambiente local e o site publicado têm armazenamentos separados.
+
+PUBLICAÇÃO
+Editar os arquivos locais não atualiza automaticamente o site publicado.
+A configuração .openai/hosting.json identifica o site existente:
+https://seven-good-adm.milkyeft5.chatgpt.site/
+Peça ao Codex para atualizar esse mesmo site; o acesso de publicação precisa
+estar disponível na conta usada no outro computador.
+
+Este ZIP inclui código, logo, testes e configuração do site.
+Não inclui histórico Git, credenciais nem dados financeiros do navegador.
