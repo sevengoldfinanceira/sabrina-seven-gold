@@ -163,6 +163,11 @@ assert.equal(vm.runInContext('state.records["2027-01:"+b].commission',context),0
 assert.equal(vm.runInContext('state.records["2027-02:"+a].commission',context),100.01,'Moved month credits new month');
 assert.equal(vm.runInContext("$('#month').value='2027-02';salesCommissionFor(a)",context),10001,'Seller filter sums commission when the person brought and closed');
 assert.equal(vm.runInContext('salesCommissionFor(c)',context),0,'Seller filter ignores sales without participation');
+vm.runInContext(`record().commissionPayments=[{id:'bordero-test',date:'2027-02-20',gross:4000,net:4000,deductions:[],salePayments:[{saleId:'sale-test',client:'Cliente teste',date:'2027-02-12',amount:4000}]}];record().commissionPaid=false;`,context);
+assert.equal(vm.runInContext("saleBorderoPaid(record(),'sale-test')",context),4000,'Bordero tracks the amount paid for the selected sale');
+assert.equal(vm.runInContext('commissionSummary().remaining',context),6001,'Partial bordero leaves the unpaid commission available');
+assert.equal(vm.runInContext('commissionSummary().paid',context),4000,'Partial bordero adds only the amount actually paid');
+assert.equal(vm.runInContext('borderoSales()[0].share-borderoSales()[0].paid',context),6001,'Sale remains selectable only for its outstanding commission');
 assert.equal(vm.runInContext('validate(JSON.parse(JSON.stringify(state))).saleEntries.length',context),1,'Sale backup roundtrip');
 assert.throws(()=>vm.runInContext('validateSales({...state,saleEntries:[{...sale,originator:"missing"}]})',context));
 console.log('PASS: commission allocation, cent rounding, preserved legacy, reassignment, cancellation, settlement locks, month isolation and backup');
