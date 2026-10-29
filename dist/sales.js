@@ -1,5 +1,7 @@
 'use strict';
 const SALE_TABLES=['Parcelinha','Adesão de 1%','Adesão de 2%'];
+function saleCompanyRevenue(s){if(!s||s.voided)return 0;if(s.table===2)return Math.round(s.amount*45/1000);if(s.table===1)return Math.round(s.amount*4/100);const installments=Math.min(12,Math.max(1,Number.isInteger(s.installments)?s.installments:1));return Math.round(s.amount*4*installments/1200);}
+function companySalesRevenue(month=$('#month').value){return (state.saleEntries||[]).filter(s=>!s.voided&&s.date?.slice(0,7)===month).reduce((total,s)=>total+saleCompanyRevenue(s),0);}
 const SALE_STEPS=['Conferir documentos e subir no Google Drive','Criar grupo no WhatsApp e enviar boas-vindas ao cliente','Enviar extrato da cota após a TED dar baixa na Embracon','Pedir ao cliente para avisar quando checar a cota e enviar no grupo da ADM para marcar como checada','Ofertar lance ao cliente'];
 let saleEditing=null,salesPersonFilter='',salesSubView='list';
 function saleShares(s){if(s.allocations)return s.allocations.map(a=>[a.person,a.amount]);return s.originator===s.closer?[[s.originator,s.commission]]:[[s.originator,Math.floor(s.commission/2)],[s.closer,s.commission-Math.floor(s.commission/2)]];}
