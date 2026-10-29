@@ -80,6 +80,12 @@ aside{background:#060606;color:#f2e5ce}
 .person-picker-options{max-height:330px;margin-top:8px;overflow-y:auto}.person-picker-options button{display:flex;align-items:center;width:100%;min-height:54px;padding:8px 10px;border:0;border-radius:9px;text-align:left;background:#fff}.person-picker-options button:hover,.person-picker-options button[aria-selected="true"]{background:var(--sg-gold-soft)}
 .person-picker-options button>span:nth-child(2){display:block;min-width:0;margin-left:10px}.person-picker-options strong,.person-picker-options small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.person-picker-options small{margin-top:3px;color:var(--sg-muted);font-size:10px}.person-check{margin-left:auto;color:var(--sg-gold-dark);font-weight:800}
 @media(max-width:700px){.people.person-picker{padding:0 16px 18px}.person-picker-field{max-width:none}.person-picker-menu{position:fixed;z-index:120;left:12px;right:12px;top:auto;bottom:12px;width:auto;max-height:72vh}.person-picker-options{max-height:52vh}}
+.profile{gap:18px}
+.profile .identity{min-width:230px}
+.profile-tabs{flex:0 1 auto;margin:0 0 0 auto;white-space:nowrap}
+.profile-tabs button{padding-left:16px;padding-right:16px}
+@media(max-width:1100px){.profile{flex-wrap:wrap}.profile-tabs{order:3;width:100%;margin:0}.profile-tabs button{flex:1}}
+@media(max-width:700px){.profile{align-items:stretch}.profile .identity{min-width:0;flex:1}.profile-tabs{display:grid;grid-template-columns:1fr}.profile-tabs button{width:100%;white-space:normal}}
 
 /* Cabeçalhos compactos: a navegação lateral já identifica cada página. */
 #summary-section>.section-head:first-child>div:first-child,
