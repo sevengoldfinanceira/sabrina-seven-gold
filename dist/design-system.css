@@ -84,6 +84,7 @@ aside{background:#060606;color:#f2e5ce}
 .profile .identity{min-width:230px}
 .profile-tabs{flex:0 1 auto;margin:0 0 0 auto;white-space:nowrap}
 .profile-tabs button{padding-left:16px;padding-right:16px}
+@media(min-width:1101px){.profile{display:grid;grid-template-columns:minmax(230px,1fr) auto minmax(140px,1fr)}.profile-tabs{justify-self:center;margin:0}.profile>#edit{justify-self:end}}
 @media(max-width:1100px){.profile{flex-wrap:wrap}.profile-tabs{order:3;width:100%;margin:0}.profile-tabs button{flex:1}}
 @media(max-width:700px){.profile{align-items:stretch}.profile .identity{min-width:0;flex:1}.profile-tabs{display:grid;grid-template-columns:1fr}.profile-tabs button{width:100%;white-space:normal}}
 
@@ -98,12 +99,17 @@ aside{background:#060606;color:#f2e5ce}
 #sales-section>.section-head:first-child,
 .monthly-expenses-head,
 .variable-expenses-head{justify-content:flex-end;min-height:0;padding-top:14px;padding-bottom:14px}
+#team-section>.section-head:first-child{align-items:flex-end;justify-content:space-between;gap:20px}
+#team-section>.section-head:first-child>.people.person-picker{flex:1;max-width:620px;padding:0;border:0}
 @media(max-width:700px){
  #summary-section>.section-head:first-child,
  #team-section>.section-head:first-child,
  #sales-section>.section-head:first-child,
  .monthly-expenses-head,
  .variable-expenses-head{padding-top:10px;padding-bottom:10px}
+ #team-section>.section-head:first-child{align-items:stretch;flex-direction:column}
+ #team-section>.section-head:first-child>.people.person-picker{width:100%;max-width:none}
+ #team-section>.section-head:first-child>#add{align-self:flex-end}
 }
 .avatar{background:var(--sg-gold-soft);color:var(--sg-gold-dark)}
 .tabs,.main-tabs,.company-expense-tabs,.sales-subtabs{gap:6px;padding:5px;border:0;border-radius:11px;background:#ece9e2}
