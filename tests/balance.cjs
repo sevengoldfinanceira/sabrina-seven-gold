@@ -83,6 +83,13 @@ assert.equal(vm.runInContext('expenseStatus({...marketingItems("2026-10")[0],pai
 assert.equal(vm.runInContext('expenseStatus({...marketingItems("2026-10")[0],paidDate:"2026-10-14"},"2026-10-18")',context),'Pago no prazo');
 assert.equal(vm.runInContext('expenseStatus(marketingItems("2026-10")[0],"2026-10-18")',context),'Vencido há 4 dia(s)');
 assert.equal(vm.runInContext('expenseStatus(marketingItems("2026-10")[1],"2026-10-18")',context),'A vencer');
+vm.runInContext(`let dashboardExpenses=[{id:'paid',name:'Pago',kind:'fixed',amount:10000,date:null,paidDate:'2026-10-10',fees:500,voided:false},{id:'late',name:'Vencido',kind:'fixed',amount:20000,date:'2026-10-01',paidDate:null,fees:0,voided:false},{id:'missing',name:'Pendente',kind:'fixed',amount:null,date:null,paidDate:null,fees:0,voided:false}];let dashboardSummary=fixedExpenseSummary(dashboardExpenses,'2026-10-18');`,context);
+assert.equal(vm.runInContext('dashboardSummary.total',context),30500,'Monthly dashboard total uses only filled values');
+assert.equal(vm.runInContext('dashboardSummary.open',context),20000,'Overdue expense stays inside open total without duplication');
+assert.equal(vm.runInContext('dashboardSummary.overdue',context),20000,'Overdue card reports its subset');
+assert.equal(vm.runInContext('dashboardSummary.missing',context),1,'Missing amount remains a visible pending item');
+assert.equal(vm.runInContext('fixedExpenseState(dashboardExpenses[0],"2026-10-18").label',context),'Pago sem vencimento');
+assert.equal(vm.runInContext('fixedExpenseDashboard().includes("Buscar gasto")',context),true,'Monthly dashboard includes working search controls');
 vm.runInContext('let feeMonth=companyMonth("2027-04");feeMonth.revenue=2000000;feeMonth.taxRate=0;let marketing=feeMonth.items.find(e=>e.id==="marketing-14");marketing.paidDate="2027-04-16";marketing.fees=1500;',context);
 assert.equal(vm.runInContext('companyTotals("2027-04").expense',context),1171500,'Fees added to expense');
 assert.equal(vm.runInContext('companyTotals("2027-04").profit',context),828500,'Fees reduce profit');
