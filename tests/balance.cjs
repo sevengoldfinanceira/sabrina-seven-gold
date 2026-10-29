@@ -163,6 +163,11 @@ assert.equal(vm.runInContext('state.records["2027-01:"+b].commission',context),0
 assert.equal(vm.runInContext('state.records["2027-02:"+a].commission',context),100.01,'Moved month credits new month');
 assert.equal(vm.runInContext("$('#month').value='2027-02';salesCommissionFor(a)",context),10001,'Seller filter sums commission when the person brought and closed');
 assert.equal(vm.runInContext('salesCommissionFor(c)',context),0,'Seller filter ignores sales without participation');
+assert.equal(vm.runInContext('saleWorkflow(state.saleEntries[0]).length',context),5,'Every sale starts with five follow-up steps');
+vm.runInContext('state.saleEntries[0].workflow=[true,true,false,false,false]',context);
+assert.equal(vm.runInContext('workflowDone(state.saleEntries[0])',context),2,'Sale workflow counts completed steps');
+assert.equal(vm.runInContext('salesPendingView([state.saleEntries[0]]).includes("2 de 5 concluídas")',context),true,'Pending tab shows sale progress');
+assert.equal(vm.runInContext('validate(JSON.parse(JSON.stringify(state))).saleEntries[0].workflow.length',context),5,'Backup preserves sale workflow');
 vm.runInContext(`record().commissionPayments=[{id:'bordero-test',date:'2027-02-20',gross:4000,net:4000,deductions:[],salePayments:[{saleId:'sale-test',client:'Cliente teste',date:'2027-02-12',amount:4000}]}];record().commissionPaid=false;`,context);
 assert.equal(vm.runInContext("saleBorderoPaid(record(),'sale-test')",context),4000,'Bordero tracks the amount paid for the selected sale');
 assert.equal(vm.runInContext('commissionSummary().remaining',context),6001,'Partial bordero leaves the unpaid commission available');
