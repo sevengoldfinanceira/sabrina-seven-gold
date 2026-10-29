@@ -90,6 +90,8 @@ assert.equal(vm.runInContext('dashboardSummary.overdue',context),20000,'Overdue 
 assert.equal(vm.runInContext('dashboardSummary.missing',context),1,'Missing amount remains a visible pending item');
 assert.equal(vm.runInContext('fixedExpenseState(dashboardExpenses[0],"2026-10-18").label',context),'Pago sem vencimento');
 assert.equal(vm.runInContext('fixedExpenseDashboard().includes("Buscar gasto")',context),true,'Monthly dashboard includes working search controls');
+assert.equal(vm.runInContext('variableExpenseDashboard().includes("Despesas cadastradas")',context),true,'Variable dashboard includes the expense list');
+assert.equal(vm.runInContext('variableExpenseDashboard().includes("Resumo de utilização")',context),true,'Variable dashboard includes the VT summary');
 vm.runInContext('let feeMonth=companyMonth("2027-04");feeMonth.revenue=2000000;feeMonth.taxRate=0;let marketing=feeMonth.items.find(e=>e.id==="marketing-14");marketing.paidDate="2027-04-16";marketing.fees=1500;',context);
 assert.equal(vm.runInContext('companyTotals("2027-04").expense',context),1171500,'Fees added to expense');
 assert.equal(vm.runInContext('companyTotals("2027-04").profit',context),828500,'Fees reduce profit');
