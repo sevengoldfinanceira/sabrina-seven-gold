@@ -68,3 +68,6 @@
  .variable-list-card{padding:10px 6px}.variable-list-head>div{align-items:stretch;flex-direction:column}.variable-list-head select{width:100%}
  .expense-table.variable-modern tbody{grid-template-columns:1fr}.expense-table.variable-modern tr{grid-template-columns:1fr 1fr}
 }
+.variable-expenses-head{justify-content:flex-end}
+.variable-expenses-head>div:first-child{display:none}
+@media(max-width:900px){.variable-expenses-head{align-items:flex-end;flex-direction:row}.variable-expenses-head .primary{align-self:auto}}

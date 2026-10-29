@@ -74,6 +74,25 @@ aside{background:#060606;color:#f2e5ce}
 .person-search-control>span{color:var(--sg-gold);font-size:22px}
 .person-search-control select{height:46px;margin:0;padding:0 34px 0 0;border:0;outline:0;background-color:transparent;box-shadow:none;font-weight:600;cursor:pointer}
 @media(max-width:700px){.people.person-picker{padding:0 16px 18px}.person-picker>label{max-width:none}}
+
+/* Cabeçalhos compactos: a navegação lateral já identifica cada página. */
+#summary-section>.section-head:first-child>div:first-child,
+#team-section>.section-head:first-child>div:first-child,
+#sales-section>.section-head:first-child>div:first-child,
+.monthly-expenses-head>div:first-child,
+.variable-expenses-head>div:first-child{display:none}
+#summary-section>.section-head:first-child,
+#team-section>.section-head:first-child,
+#sales-section>.section-head:first-child,
+.monthly-expenses-head,
+.variable-expenses-head{justify-content:flex-end;min-height:0;padding-top:14px;padding-bottom:14px}
+@media(max-width:700px){
+ #summary-section>.section-head:first-child,
+ #team-section>.section-head:first-child,
+ #sales-section>.section-head:first-child,
+ .monthly-expenses-head,
+ .variable-expenses-head{padding-top:10px;padding-bottom:10px}
+}
 .avatar{background:var(--sg-gold-soft);color:var(--sg-gold-dark)}
 .tabs,.main-tabs,.company-expense-tabs,.sales-subtabs{gap:6px;padding:5px;border:0;border-radius:11px;background:#ece9e2}
 .tabs{width:fit-content;margin-bottom:24px}
