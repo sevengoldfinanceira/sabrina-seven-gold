@@ -1,0 +1,150 @@
+:root{
+  --sg-bg:#f7f6f2;
+  --sg-surface:#ffffff;
+  --sg-surface-soft:#f5f4f1;
+  --sg-text:#1f2328;
+  --sg-muted:#717780;
+  --sg-border:#e4e1da;
+  --sg-gold:#b98d3e;
+  --sg-gold-dark:#8a6424;
+  --sg-gold-soft:#f7efe0;
+  --sg-success:#2f7547;
+  --sg-success-soft:#e7f4ea;
+  --sg-warning:#9a6500;
+  --sg-warning-soft:#fff1d2;
+  --sg-danger:#ad3434;
+  --sg-danger-soft:#fde5e5;
+  --sg-radius:12px;
+  --sg-shadow:0 6px 22px rgba(30,25,15,.05);
+  --sg-space-1:8px;
+  --sg-space-2:16px;
+  --sg-space-3:24px;
+  --sg-space-4:32px;
+}
+html{background:var(--sg-bg)}
+body{background:var(--sg-bg);color:var(--sg-text);font:14px 'DM Sans',sans-serif;line-height:1.5}
+main{max-width:1700px;padding:32px 32px 24px}
+h1,h2,h3,.stat strong,.team-vt-amount{font-family:Manrope,'DM Sans',sans-serif;color:var(--sg-text)}
+h1{font-size:28px;line-height:1.2;letter-spacing:-.7px}
+h2{font-size:21px;line-height:1.3}
+h3{font-size:15px;line-height:1.4}
+p,.hint,small{color:var(--sg-muted)}
+.eyebrow{color:var(--sg-gold-dark);font-size:10px;letter-spacing:1.6px}
+button,input,select,textarea{font:inherit}
+button{min-height:40px;border:1px solid var(--sg-border);border-radius:10px;background:var(--sg-surface);color:var(--sg-text);padding:9px 14px}
+button:hover{border-color:#d1b06d;background:#fcfaf5}
+button:active{transform:translateY(1px)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid rgba(185,141,62,.25);outline-offset:2px}
+button:disabled,input:disabled,select:disabled{opacity:.58;cursor:not-allowed}
+.primary,.sidebar-controls .main-tabs .selected{background:var(--sg-gold)!important;border-color:var(--sg-gold)!important;color:#fff!important;box-shadow:none!important}
+.primary:hover{background:#a97e35!important;border-color:#a97e35!important}
+input,select,textarea{min-height:44px;margin-top:8px;border:1px solid #dcd9d2;border-radius:10px;background:#fff;color:var(--sg-text);padding:10px 12px}
+input::placeholder,textarea::placeholder{color:#9b9da1}
+label{color:#373b40;font-size:12px;font-weight:600}
+aside{background:#060606;color:#f2e5ce}
+.sidebar-controls .period,.sidebar-controls .toolbar button{background:#13110e;border-color:#443720}
+.sidebar-controls .main-tabs{gap:8px}
+.sidebar-controls .main-tabs button{min-height:44px;border-radius:10px;color:#d3c2a3}
+.sidebar-controls .main-tabs .selected{color:#fff!important}
+.mobile-menu-toggle{border-radius:11px}
+.workspace{margin-top:24px;border:1px solid var(--sg-border);border-radius:14px;background:var(--sg-surface);box-shadow:var(--sg-shadow);overflow:hidden}
+.section-head{padding:24px}
+.section-head>div>p{margin-top:4px}
+.stats{gap:16px}
+.stat{padding:20px;border:1px solid var(--sg-border);border-radius:12px;background:var(--sg-surface);box-shadow:var(--sg-shadow)}
+.stat:first-child{background:var(--sg-surface);border-color:var(--sg-border);color:var(--sg-text)}
+.stat:first-child .stat-label,.stat:first-child small{color:var(--sg-muted)}
+.stat strong{font-size:24px;margin:10px 0 5px}
+.stat-label{color:var(--sg-muted)}
+.summary-panel,.week,.commission,.balance-summary>div,.commission-breakdown>div,.workflow-card,.workflow-summary>div,.sales label,.configuration,.advance-deduction-picker,.variable-vt-card,.variable-quick,.variable-list-card{border:1px solid var(--sg-border);border-radius:var(--sg-radius);background:var(--sg-surface);box-shadow:var(--sg-shadow)}
+.summary-panel{background:var(--sg-surface);border-radius:14px}
+.summary-columns{gap:16px}
+.configuration,.sales label,.commission-breakdown>div,.balance-summary>div,.sales-filter-bar{background:var(--sg-surface-soft)}
+.configuration{padding:16px;border-radius:12px;gap:16px}
+.profile{padding:4px 0 16px;border-bottom:1px solid var(--sg-border)}
+.people{gap:8px;border-bottom:1px solid var(--sg-border)}
+.person{min-height:54px;border-radius:10px;background:#fff}
+.person:hover{border-color:#d3b473;background:#fcfaf5}
+.person.selected{background:var(--sg-gold-soft);border-color:#cba55e}
+.avatar{background:var(--sg-gold-soft);color:var(--sg-gold-dark)}
+.tabs,.main-tabs,.company-expense-tabs,.sales-subtabs{gap:6px;padding:5px;border:0;border-radius:11px;background:#ece9e2}
+.tabs{width:fit-content;margin-bottom:24px}
+.tabs button,.main-tabs button,.company-expense-tabs button,.sales-subtabs button{min-height:38px;padding:8px 14px;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--sg-muted);font-weight:700}
+.tabs button.selected,.main-tabs .selected,.company-expense-tabs button.selected,.sales-subtabs button.selected{border-color:#d8c39c;background:#fff;color:var(--sg-gold-dark);box-shadow:0 2px 8px rgba(40,30,10,.06)}
+.day span{border-radius:8px;background:#fff}
+.day[aria-pressed=true] span{background:var(--sg-gold);border-color:var(--sg-gold);color:#fff}
+.day.absent span{background:var(--sg-danger-soft);border-color:#efbcbc;color:var(--sg-danger)}
+.day.expected span{background:var(--sg-warning-soft);border-color:#ead19c;color:var(--sg-warning)}
+.pay{border-color:#dcc48f;background:#fffaf0;color:var(--sg-gold-dark)}
+.pay.paid,.badge,.workflow-step.done,.workflow-card.complete{border-color:#bad8c1;background:var(--sg-success-soft);color:var(--sg-success)}
+.ledger>div{padding:9px 0;border-color:var(--sg-border)}
+.profit-result,.bordero-total{background:#252015;color:#f0d49a;border-radius:12px}
+.profit-result span,.profit-result strong,.bordero-total strong{color:#f0d49a}
+.summary-notice{border-color:#ead39f;background:var(--sg-warning-soft);color:#76520e}
+.sales-filter-bar{border-color:var(--sg-border);border-radius:12px}
+.sale-table-wrap,.expense-table-wrap{border-radius:12px}
+.sale-table,.expense-table{background:#fff}
+.sale-table th,.expense-table th{height:44px;background:var(--sg-surface-soft);color:#646970;border:0;text-transform:none;letter-spacing:.02em}
+.sale-table td,.expense-table td{border-color:#ece9e3}
+.sale-table tbody tr:hover,.expense-table tbody tr:hover{background:#fcfbf8}
+.sale-table td button,.expense-table td button{min-height:34px}
+.workflow-card{padding:20px}
+.workflow-card-head>span{background:var(--sg-warning-soft);color:var(--sg-warning)}
+.workflow-step{border-radius:10px;background:var(--sg-surface-soft)}
+.workflow-step>span{background:var(--sg-gold-soft);color:var(--sg-gold-dark)}
+.workflow-step.done>span{background:var(--sg-success);color:#fff}
+.expense-status,.badge,.workflow-card-head>span{border-radius:999px}
+.expense-menu[open]>div{border-color:var(--sg-border);border-radius:10px;box-shadow:0 12px 28px rgba(25,20,10,.12)}
+.expense-menu .danger{color:var(--sg-danger)}
+.empty{border:1px dashed #d8d4cc;border-radius:12px;background:#faf9f6}
+dialog{border:1px solid var(--sg-border);border-radius:14px;background:#fff;padding:24px;box-shadow:0 24px 70px rgba(20,15,10,.24)}
+dialog::backdrop{background:rgba(20,17,12,.62);backdrop-filter:blur(2px)}
+dialog .section-head{border-bottom:1px solid var(--sg-border);margin-bottom:20px;padding:0 0 16px}
+dialog .section-head button{min-width:40px;padding:8px}
+dialog .primary{min-height:44px}
+#toast{border:1px solid #4d3d24;border-radius:10px;background:#211b12;color:#f6e2b8;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.cloud-login{background:#090806}
+.cloud-login form{border-color:#4f412c;border-radius:16px;background:#14120f;box-shadow:0 24px 70px rgba(0,0,0,.45)}
+.cloud-login input{border-color:#4a4030;background:#201d18}
+footer{border-top:1px solid var(--sg-border);margin-top:24px}
+@media(max-width:1100px){
+  main{padding:28px 22px 20px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .summary-columns{grid-template-columns:1fr}
+}
+@media(max-width:700px){
+  main{padding:80px 16px 20px}
+  .stats{grid-template-columns:1fr 1fr;gap:10px}
+  .stat{padding:16px}
+  .stat strong{font-size:20px}
+  .workspace{margin-top:16px;border-radius:12px}
+  .section-head,.profile,.week-top{align-items:flex-start;flex-direction:column}
+  .section-head{padding:18px 16px}
+  .section-head>.primary{width:100%}
+  #detail{padding:18px 16px}
+  .tabs,.main-tabs,.company-expense-tabs,.sales-subtabs{width:100%;overflow-x:auto}
+  .tabs button,.main-tabs button,.company-expense-tabs button,.sales-subtabs button{flex:1;white-space:nowrap}
+  .configuration{align-items:stretch;flex-direction:column}
+  .configuration label{max-width:none}
+  .weeks{grid-template-columns:1fr}
+  .week{padding:16px}
+  .commission{align-items:stretch;flex-direction:column;padding:18px}
+  .commission label{max-width:none}
+  .summary-panel{padding:16px}
+  .sales-filter-bar{margin-inline:16px}
+  .sale-table-wrap{max-width:100%;overflow-x:auto;border:1px solid var(--sg-border)}
+  .sale-table{min-width:700px}
+  .workflow-summary{grid-template-columns:1fr 1fr}
+  .workflow-list{padding-inline:16px}
+  dialog{max-height:92dvh;overflow:auto;padding:20px}
+  dialog .two{grid-template-columns:1fr}
+  button{min-height:42px}
+  footer{display:none}
+}
+@media(max-width:430px){
+  .stats{grid-template-columns:1fr}
+  .workflow-summary{grid-template-columns:1fr}
+  .commission-breakdown{grid-template-columns:1fr}
+  .days{gap:3px}
+  .day span{height:36px}
+}
