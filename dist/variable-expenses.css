@@ -1,0 +1,70 @@
+/* Tela de gastos variados */
+.variable-expenses{display:grid;gap:20px}
+.variable-expenses-head{display:flex;align-items:flex-start;justify-content:space-between;gap:24px}
+.variable-expenses-head h2{font:800 30px Manrope,sans-serif;letter-spacing:-.8px;margin:0 0 5px}
+.variable-expenses-head p{font-size:14px}
+.company-expense-tabs{display:inline-flex;justify-self:start;gap:4px;padding:4px;background:#eeece6;border-radius:12px}
+.company-expense-tabs button{min-width:150px;border:0;background:transparent;font-weight:700;color:#60655f}
+.company-expense-tabs button.selected{background:#fff;color:#9a7025;border:1px solid #dfbd78;box-shadow:0 2px 7px #2b241512}
+.variable-vt-card{display:grid;grid-template-columns:minmax(280px,1.15fr) minmax(520px,2fr);align-items:center;gap:28px;padding:24px 26px;background:#fff;border:1px solid #e5d9c3;border-radius:14px;box-shadow:0 3px 14px #32261308}
+.variable-vt-title{display:flex;align-items:center;gap:18px}
+.variable-vt-icon{width:76px;height:76px;display:grid;place-items:center;flex:none;border-radius:16px;background:#f7f0e3;color:#b98a36;font-size:0}
+.variable-vt-icon::before{content:"🚌";font-size:28px}
+.variable-vt-title h3{font:800 20px Manrope,sans-serif;margin:0 0 5px}
+.variable-vt-title p{font-size:13px}
+.variable-vt-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.variable-vt-metrics>div:not(.variable-vt-progress){padding:0 28px;border-left:1px solid #e6e2da}
+.variable-vt-metrics span{display:block;color:#777c75;font-size:12px;margin-bottom:5px}
+.variable-vt-metrics strong{font:800 22px Manrope,sans-serif}
+.variable-vt-progress{grid-column:1/-1;display:flex;align-items:center;gap:16px;margin:17px 28px 0}
+.variable-vt-progress{height:10px;overflow:hidden;background:#e8e9e6;border-radius:999px}
+.variable-vt-progress i{display:block;height:100%;max-width:100%;background:#c99a43;border-radius:999px}
+.variable-vt-metrics>small{grid-column:1/-1;text-align:right;margin:8px 28px 0;color:#777c75;font-weight:600}
+.variable-quick{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:13px 20px;background:#fff;border:1px solid #e5d9c3;border-radius:12px}
+.variable-quick strong{margin-right:10px;font:700 14px Manrope,sans-serif}
+.variable-quick>div{display:flex;gap:10px;flex-wrap:wrap}.variable-quick button{padding:9px 15px;border-color:#dfbd78;color:#8a6222;background:#fff}
+.variable-list-card{background:#fff;border:1px solid #e5d9c3;border-radius:14px;padding:12px 10px 8px;overflow:visible}
+.variable-list-head{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:3px 14px 14px}
+.variable-list-head h3{font:800 20px Manrope,sans-serif}
+.variable-list-head>div{display:flex;align-items:end;gap:10px}.variable-list-head label{color:transparent;font-size:0}
+.variable-list-head input{width:280px;margin:0;font-size:13px;color:var(--ink)}
+.variable-list-head select{width:auto;min-width:130px;margin:0;font-size:13px;color:var(--ink)}
+.expense-table.variable-modern{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed}
+.expense-table.variable-modern thead th{padding:13px 16px;background:#f4f4f1;color:#666d67;font-size:11px;text-align:left;letter-spacing:.02em}
+.expense-table.variable-modern thead th:first-child{border-radius:10px 0 0 10px;width:34%}
+.expense-table.variable-modern thead th:last-child{border-radius:0 10px 10px 0;width:17%}
+.expense-table.variable-modern th:nth-child(4),.expense-table.variable-modern td:nth-child(4){text-align:right}
+.expense-table.variable-modern td{height:58px;padding:12px 16px;border-bottom:1px solid #ece7df;vertical-align:middle;font-size:12px}
+.expense-table.variable-modern tbody tr:last-child td{border-bottom:0}
+.expense-table.variable-modern td:first-child{font-weight:700}
+.variable-expense-actions{display:flex;justify-content:flex-end;align-items:center;gap:8px;position:relative}
+.variable-expense-actions button{padding:8px 12px;background:#fff}
+.variable-expense-actions summary{display:grid;place-items:center;min-width:38px;padding:8px;border:1px solid var(--border);border-radius:8px;cursor:pointer;list-style:none}
+.variable-actions-menu{position:absolute;right:0;top:42px;z-index:20;min-width:145px;padding:6px;background:#fff;border:1px solid #dfddd6;border-radius:10px;box-shadow:0 12px 30px #1d170f20}
+.variable-actions-menu button{width:100%;border:0;text-align:left;color:#9b3232}
+
+@media(max-width:900px){
+ .variable-expenses-head{align-items:stretch;flex-direction:column}.variable-expenses-head .primary{align-self:flex-start}
+ .variable-vt-card{grid-template-columns:1fr;padding:20px}.variable-vt-metrics{border-top:1px solid #ece7df;padding-top:20px}
+ .variable-vt-metrics>div:first-child{border-left:0;padding-left:0}.variable-vt-progress{margin-left:0;margin-right:0}
+ .variable-list-head{align-items:stretch;flex-direction:column}.variable-list-head input{width:100%}
+ .expense-table.variable-modern,.expense-table.variable-modern tbody{display:block}
+ .expense-table.variable-modern thead{display:none}
+ .expense-table.variable-modern tbody{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:0 5px 7px}
+ .expense-table.variable-modern tr{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px;border:1px solid #e9e3d9;border-radius:12px;background:#fff}
+ .expense-table.variable-modern td{display:block;height:auto;padding:0;border:0!important;text-align:left!important}
+ .expense-table.variable-modern td::before{display:block;margin-bottom:4px;color:#848981;font-size:10px;font-weight:600}
+ .expense-table.variable-modern td:nth-child(1){grid-column:1/-1;font-size:14px}.expense-table.variable-modern td:nth-child(1)::before{content:"Descrição"}
+ .expense-table.variable-modern td:nth-child(2)::before{content:"Data da compra"}.expense-table.variable-modern td:nth-child(3)::before{content:"Data do pagamento"}
+ .expense-table.variable-modern td:nth-child(4)::before{content:"Valor"}.expense-table.variable-modern td:nth-child(5){grid-column:1/-1}.expense-table.variable-modern td:nth-child(5)::before{content:"Ações"}
+ .variable-expense-actions{justify-content:flex-start}
+}
+@media(max-width:600px){
+ .variable-expenses{gap:14px}.variable-expenses-head h2{font-size:25px}.company-expense-tabs{display:grid;grid-template-columns:1fr 1fr;width:100%}.company-expense-tabs button{min-width:0;padding:10px 8px}
+ .variable-vt-card{padding:16px}.variable-vt-title{gap:12px}.variable-vt-icon{width:54px;height:54px}.variable-vt-title h3{font-size:17px}
+ .variable-vt-metrics{grid-template-columns:1fr 1fr;row-gap:16px}.variable-vt-metrics>div:not(.variable-vt-progress){padding:0 12px}.variable-vt-metrics>div:nth-child(3){grid-column:1/-1;border-left:0;padding-left:0}.variable-vt-metrics strong{font-size:18px}
+ .variable-vt-progress{margin-top:16px}.variable-vt-metrics>small{margin:0;text-align:right}
+ .variable-quick{align-items:stretch;flex-direction:column}.variable-quick strong{margin:0}.variable-quick>div{flex-direction:column}.variable-quick button{width:100%;text-align:left}
+ .variable-list-card{padding:10px 6px}.variable-list-head>div{align-items:stretch;flex-direction:column}.variable-list-head select{width:100%}
+ .expense-table.variable-modern tbody{grid-template-columns:1fr}.expense-table.variable-modern tr{grid-template-columns:1fr 1fr}
+}
