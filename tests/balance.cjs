@@ -94,6 +94,7 @@ vm.runInContext(`$('#month').value='2027-05';let tv=prepare(record(),'2027-05');
 assert.equal(vm.runInContext('companyTotals().vtPaid',context),6000,'VT payments aggregated across sellers');
 assert.equal(vm.runInContext('companyTotals().vtPayments',context),2,'Cancelled payment excluded');
 assert.equal(vm.runInContext('companyTotals().vt',context),1200,'Used VT separate from advances');
+assert.equal(vm.runInContext('compactTeamVT(companyTotals()).includes("Não utilizado")&&compactTeamVT(companyTotals()).includes("48,00")',context),true,'Compact VT line shows paid balance not yet used');
 assert.equal(vm.runInContext('companyTotals("2027-06").vtPaid',context),0,'Aggregate isolated by month');
 vm.runInContext('companyMonth().revenue=2000000;companyMonth().taxRate=0',context);
 assert.equal(vm.runInContext('companyTotals().profit===2000000-companyTotals().expense-companyTotals().commission-1200',context),true,'No double counting of VT');
