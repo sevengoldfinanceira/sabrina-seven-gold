@@ -103,7 +103,6 @@ body:has(#team-section:not([hidden])) .stats{grid-template-columns:repeat(3,minm
 #summary-section>.section-head:first-child>div:first-child,
 #team-section>.section-head:first-child>div:first-child,
 #sales-section>.section-head:first-child>div:first-child,
-.monthly-expenses-head>div:first-child,
 .variable-expenses-head>div:first-child{display:none}
 #summary-section>.section-head:first-child,
 #team-section>.section-head:first-child,
