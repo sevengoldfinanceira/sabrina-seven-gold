@@ -104,6 +104,8 @@ body:has(#team-section:not([hidden])) .stats{grid-template-columns:repeat(3,minm
 #team-section>.section-head:first-child>div:first-child,
 #sales-section>.section-head:first-child>div:first-child{display:none}
 #summary-section>.section-head:first-child,
+#summary-section>.summary-notice{display:none}
+#summary-section>.section-head:first-child,
 #team-section>.section-head:first-child,
 #sales-section>.section-head:first-child,
 .monthly-expenses-head,
