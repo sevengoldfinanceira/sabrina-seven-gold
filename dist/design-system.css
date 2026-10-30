@@ -105,6 +105,11 @@ body:has(#team-section:not([hidden])) .stats{grid-template-columns:repeat(3,minm
 .variable-expenses-head{justify-content:flex-end;min-height:0;padding-top:14px;padding-bottom:14px}
 #team-section>.section-head:first-child{align-items:flex-end;justify-content:space-between;gap:20px}
 #team-section>.section-head:first-child>.people.person-picker{flex:1;max-width:620px;padding:0;border:0}
+@media(min-width:701px){
+ #team-section>.section-head:first-child{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,620px) minmax(0,1fr)}
+ #team-section>.section-head:first-child>.people.person-picker{grid-column:2;width:100%;justify-self:center}
+ #team-section>.section-head:first-child>#add{grid-column:3;justify-self:end}
+}
 @media(max-width:700px){
  #summary-section>.section-head:first-child,
  #team-section>.section-head:first-child,
