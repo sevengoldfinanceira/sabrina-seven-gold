@@ -102,8 +102,7 @@ body:has(#team-section:not([hidden])) .stats{grid-template-columns:repeat(3,minm
 /* Cabeçalhos compactos: a navegação lateral já identifica cada página. */
 #summary-section>.section-head:first-child>div:first-child,
 #team-section>.section-head:first-child>div:first-child,
-#sales-section>.section-head:first-child>div:first-child,
-.variable-expenses-head>div:first-child{display:none}
+#sales-section>.section-head:first-child>div:first-child{display:none}
 #summary-section>.section-head:first-child,
 #team-section>.section-head:first-child,
 #sales-section>.section-head:first-child,
