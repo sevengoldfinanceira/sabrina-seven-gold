@@ -107,3 +107,7 @@
 @media(max-width:1250px){.variable-list-card .expense-table.variable-modern tbody{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.variable-list-card .expense-table.variable-modern tbody{grid-template-columns:1fr}.variable-list-card .variable-expense-actions{justify-content:flex-start}}
 @media(max-width:520px){.variable-list-card .expense-table.variable-modern tr{grid-template-columns:1fr}.variable-list-card .expense-table.variable-modern td:first-child,.variable-list-card .expense-table.variable-modern td:last-child{grid-column:auto}}
+
+/* A navegação deve permanecer visível quando o painel Variados é reconstruído. */
+.variable-expenses-head>.company-expense-tabs{display:inline-flex!important;visibility:visible!important;opacity:1!important;margin:0}
+@media(max-width:700px){.variable-expenses-head>.company-expense-tabs{display:grid!important;grid-template-columns:1fr 1fr;width:100%}}
