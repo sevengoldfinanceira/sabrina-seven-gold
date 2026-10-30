@@ -55,3 +55,5 @@ aside{width:290px;padding:28px 22px;overflow-y:auto}main{margin-left:290px;paddi
 @media(max-width:1250px){.monthly-expenses .expense-table.modern tbody{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.monthly-expenses .expense-table.modern tbody{grid-template-columns:1fr}.monthly-expenses .expense-table-wrap.modern{padding:0;background:transparent}.monthly-expenses .expense-actions-modern{justify-content:flex-start}}
 @media(max-width:520px){.monthly-expenses .expense-table.modern tr{grid-template-columns:1fr}.monthly-expenses .expense-table.modern td:first-child,.monthly-expenses .expense-table.modern td:last-child{grid-column:auto}}
+
+.danger-person-delete{width:100%;margin:8px 0 4px;border-color:#e6a3a3;background:#fff6f6;color:#b32626;font-weight:700}.danger-person-delete:hover{border-color:#cf5f5f;background:#fff0f0}.danger-person-delete[hidden]{display:none}
