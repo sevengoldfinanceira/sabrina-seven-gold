@@ -1,5 +1,5 @@
 const vm=require('node:vm'),fs=require('node:fs'),assert=require('node:assert/strict');
-const elements={};const context={console,Intl,Date,Number,Set,JSON,Math,String,Object,Array,alert:()=>{},localStorage:{getItem:()=>null,setItem:()=>{}},document:{querySelector:s=>elements[s]??(elements[s]={value:'',style:{},addEventListener(){}}),addEventListener(){}},setTimeout,clearTimeout};vm.createContext(context);vm.runInContext(fs.readFileSync('dist/expenses.js','utf8'),context);vm.runInContext(fs.readFileSync('dist/advances.js','utf8'),context);vm.runInContext(fs.readFileSync('dist/sales.js','utf8'),context);vm.runInContext(fs.readFileSync('dist/summary.js','utf8'),context);vm.runInContext(fs.readFileSync('dist/app.js','utf8'),context);
+const elements={};const context={console,Intl,Date,Number,Set,JSON,Math,String,Object,Array,alert:()=>{},localStorage:{getItem:()=>null,setItem:()=>{}},document:{querySelector:s=>elements[s]??(elements[s]={value:'',style:{},addEventListener(){}}),addEventListener(){}},setTimeout,clearTimeout};vm.createContext(context);vm.runInContext(fs.readFileSync('dist/expenses.js','utf8'),context);vm.runInContext(fs.readFileSync('dist/expense-month-transfer.js','utf8'),context);vm.runInContext(fs.readFileSync('dist/advances.js','utf8'),context);vm.runInContext(fs.readFileSync('dist/sales.js','utf8'),context);vm.runInContext(fs.readFileSync('dist/summary.js','utf8'),context);vm.runInContext(fs.readFileSync('dist/app.js','utf8'),context);
 vm.runInContext(`
 $('#month').value='2026-10';selected='seven-lucas-gargi';
 let r=prepare(record(),'2026-10');r.fare=6;r.rides=2;
@@ -289,3 +289,10 @@ vm.runInContext("delete sr.attendance[3];delete sr.attendance[4];let unconfirmed
 assert.equal(vm.runInContext('unconfirmed.afterPending',context),vm.runInContext('cashAfter.afterPending',context),'Forecast attendance never deducted');
 assert.equal(vm.runInContext('unconfirmed.vtPending',context),500);
 console.log('PASS: paid expense moves between columns once; unconfirmed VT never reduces balances');
+assert.equal(vm.runInContext("expenseDestinationMonth('variable','2027-05-28','2027-06-03','2027-05')",context),'2027-06');
+assert.equal(vm.runInContext("expenseDestinationMonth('fixed','2027-05-28','2027-06-03','2027-05')",context),'2027-05');
+vm.runInContext(`state.company={'2027-05':{revenue:null,items:[{id:'moved-variable',kind:'variable',name:'Compra parcelada',amount:25000,date:'2027-05-28',paidDate:'2027-06-03',fees:0,voided:false}]}};storeExpenseInMonth(state.company['2027-05'].items[0],'2027-05','2027-06');`,context);
+assert.equal(vm.runInContext("companyMonth('2027-05').items.some(item=>item.id==='moved-variable')",context),false);
+assert.equal(vm.runInContext("companyMonth('2027-06').items.find(item=>item.id==='moved-variable').date",context),'2027-05-28','Purchase date is preserved after moving to payment month');
+assert.doesNotThrow(()=>vm.runInContext('validateCompany(state)',context));
+console.log('PASS: variable expenses move to the payment month while preserving purchase data');
