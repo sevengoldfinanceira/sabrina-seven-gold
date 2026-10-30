@@ -129,6 +129,12 @@ body:has(#team-section:not([hidden])) .stats{grid-template-columns:repeat(3,minm
 .sales-toolbar .sales-subtabs{margin:0}
 @media(max-width:700px){.sales-toolbar{align-items:stretch;flex-direction:column;padding:12px 16px}.sales-toolbar .sales-subtabs{width:100%;margin:0}.sales-toolbar>.primary{align-self:flex-end}}
 .day span{border-radius:8px;background:#fff}
+.week-carousel-head{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:14px;margin:16px 0 12px;padding:12px 14px;border:1px solid var(--sg-border);border-radius:12px;background:#faf9f6;text-align:center}
+.week-carousel-head button{display:grid;place-items:center;width:44px;height:44px;padding:0;border-radius:10px;font-size:24px}
+.week-carousel-head button:disabled{cursor:default;opacity:.35}
+.week-carousel-head span,.week-carousel-head strong{display:block}.week-carousel-head span{color:var(--sg-gold-dark);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.week-carousel-head strong{margin-top:4px;font-size:15px;text-transform:capitalize}
+.weeks.week-carousel{display:block}.week-carousel>.week{width:100%;padding:24px 28px;border-radius:14px}.week-carousel>.week.current-week{border-color:#c99b4c;box-shadow:inset 0 3px #c99b4c}
+@media(max-width:700px){.week-carousel-head{grid-template-columns:40px minmax(0,1fr) 40px;padding:10px}.week-carousel-head button{width:40px;height:40px}.week-carousel-head strong{font-size:12px}.week-carousel>.week{padding:18px 14px}}
 .day[aria-pressed=true] span{background:var(--sg-gold);border-color:var(--sg-gold);color:#fff}
 .day.absent span{background:var(--sg-danger-soft);border-color:#efbcbc;color:var(--sg-danger)}
 .day.expected span{background:var(--sg-warning-soft);border-color:#ead19c;color:var(--sg-warning)}
