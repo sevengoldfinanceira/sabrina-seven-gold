@@ -218,6 +218,17 @@ assert.equal(vm.runInContext('companySalesRevenue()',context),350000,'Cancelled 
 vm.runInContext('state.parcelinhaCommissionRule="old";state.saleEntries=[{id:"parcelinha-old",client:"Antiga",date:"2027-02-01",table:0,amount:45000000,installments:5,originator:a,closer:b,commission:300000,allocations:[{person:a,rate:0.0666666666666667,amount:150000},{person:b,rate:0.0666666666666667,amount:150000}],voided:false,workflow:[false,false,false,false,false]}];syncSales()',context);
 assert.equal(vm.runInContext('state.saleEntries[0].commission',context),300000,'Existing Parcelinha sales migrate to 0.8% divided by 12 for each participation');
 assert.equal(vm.runInContext('state.saleEntries[0].allocations[0].amount',context),150000,'Existing Parcelinha preserves the full rate for each participant');
+vm.runInContext(`let receiptCalc=calculateSale(10000000,1,a,b,0.8,0.8);state.saleEntries=[{id:'company-receipt-sale',client:'Cliente recebimento',date:'2027-06-10',table:1,amount:10000000,installments:1,originator:a,closer:b,...receiptCalc,voided:false,workflow:[false,false,false,false,false]}];state.companyCommissionPayments=[];$('#month').value='2027-06';`,context);
+assert.equal(vm.runInContext('representativePaymentSummary().due',context),400000,'Company receipt starts with the official commission due');
+vm.runInContext(`state.companyCommissionPayments.push({id:'receipt-1',saleId:'company-receipt-sale',date:'2027-06-12',amount:150000,voided:false})`,context);
+assert.equal(vm.runInContext('representativeBalance(state.saleEntries[0])',context),250000,'Partial receipt leaves its exact balance for another week');
+vm.runInContext(`state.companyCommissionPayments.push({id:'receipt-2',saleId:'company-receipt-sale',date:'2027-06-19',amount:250000,voided:false})`,context);
+assert.equal(vm.runInContext('representativeBalance(state.saleEntries[0])',context),0,'Later receipt completes the sale commission');
+assert.equal(vm.runInContext('representativeReceiptsView(state.saleEntries).includes("Histórico de recebimentos")',context),true,'Receipt tab includes weekly history');
+assert.equal(vm.runInContext('validate(JSON.parse(JSON.stringify(state))).companyCommissionPayments.length',context),2,'Backup preserves company receipts');
+vm.runInContext('state.companyCommissionPayments[1].voided=true',context);
+assert.equal(vm.runInContext('representativeBalance(state.saleEntries[0])',context),250000,'Voiding a receipt restores the pending balance');
+assert.throws(()=>vm.runInContext('validateSales({...state,companyCommissionPayments:[{id:"bad",saleId:"missing",date:"2027-06-12",amount:1,voided:false}]})',context));
 assert.throws(()=>vm.runInContext('validateSales({...state,saleEntries:[{...sale,installments:13}]})',context));
 assert.throws(()=>vm.runInContext('validateSales({...state,saleEntries:[{...sale,voidedDate:"2027-02-30"}]})',context));
 console.log('PASS: role rates, company revenue rules, exact Parcelinha calculation, summed same-person rates and full differing-role rates');
