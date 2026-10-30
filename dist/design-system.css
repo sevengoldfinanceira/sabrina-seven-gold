@@ -61,6 +61,13 @@ body:has(#team-section:not([hidden])) .stats{grid-template-columns:repeat(3,minm
 .stat strong{font-size:24px;margin:10px 0 5px}
 .stat-label{color:var(--sg-muted)}
 .summary-panel,.week,.commission,.balance-summary>div,.commission-breakdown>div,.workflow-card,.workflow-summary>div,.sales label,.configuration,.advance-deduction-picker,.variable-vt-card,.variable-quick,.variable-list-card{border:1px solid var(--sg-border);border-radius:var(--sg-radius);background:var(--sg-surface);box-shadow:var(--sg-shadow)}
+/* Faixa lateral colorida compartilhada por todos os cards do sistema. */
+.stat,.summary-panel,.week,.commission,.balance-summary>div,.commission-breakdown>div,.workflow-card,.workflow-summary>div,.workflow-step,.sales label,.configuration,.advance-deduction-picker,.advance-card,.receipt-summary>div,.receipt-reminder,.receipt-history,.sales-filter-bar,.rent-summary,.team-vt-total,.profit-result,.bordero-total{border-left:3px solid var(--card-accent,var(--sg-gold))}
+.stats>.stat:nth-child(4n+1),.summary-columns>.summary-panel:nth-child(4n+1),.balance-summary>div:nth-child(4n+1),.commission-breakdown>div:nth-child(4n+1),.workflow-summary>div:nth-child(4n+1),.advance-card-grid>.advance-card:nth-child(4n+1),.receipt-summary>div:nth-child(4n+1){--card-accent:#b99555}
+.stats>.stat:nth-child(4n+2),.summary-columns>.summary-panel:nth-child(4n+2),.balance-summary>div:nth-child(4n+2),.commission-breakdown>div:nth-child(4n+2),.workflow-summary>div:nth-child(4n+2),.advance-card-grid>.advance-card:nth-child(4n+2),.receipt-summary>div:nth-child(4n+2){--card-accent:#69b879}
+.stats>.stat:nth-child(4n+3),.summary-columns>.summary-panel:nth-child(4n+3),.balance-summary>div:nth-child(4n+3),.commission-breakdown>div:nth-child(4n+3),.workflow-summary>div:nth-child(4n+3),.advance-card-grid>.advance-card:nth-child(4n+3),.receipt-summary>div:nth-child(4n+3){--card-accent:#dfa72f}
+.stats>.stat:nth-child(4n),.summary-columns>.summary-panel:nth-child(4n),.balance-summary>div:nth-child(4n),.commission-breakdown>div:nth-child(4n),.workflow-summary>div:nth-child(4n),.advance-card-grid>.advance-card:nth-child(4n),.receipt-summary>div:nth-child(4n){--card-accent:#e47070}
+.expense-stat.total{--card-accent:#b99555}.expense-stat.paid,.workflow-card.complete{--card-accent:#69b879}.expense-stat.open{--card-accent:#dfa72f}.expense-stat.overdue,.advance-card.voided{--card-accent:#e47070}
 .summary-panel{background:var(--sg-surface);border-radius:14px}
 .summary-columns{gap:16px}
 .configuration,.sales label,.commission-breakdown>div,.balance-summary>div,.sales-filter-bar{background:var(--sg-surface-soft)}
@@ -203,6 +210,7 @@ footer{border-top:1px solid var(--sg-border);margin-top:24px}
   .sales-filter-bar{margin-inline:16px}
   .sale-table-wrap{max-width:100%;overflow-x:auto;border:1px solid var(--sg-border)}
   .sale-table{min-width:700px}
+  .expense-table.modern tr{border-left:3px solid var(--sg-gold)}
   .workflow-summary{grid-template-columns:1fr 1fr}
   .workflow-list{padding-inline:16px}
   dialog{max-height:92dvh;overflow:auto;padding:20px}

@@ -82,3 +82,7 @@
  .monthly-expense-actions{display:flex;flex-wrap:wrap}
 }
 @media(max-width:520px){.monthly-expense-actions{display:grid;grid-template-columns:1fr}}
+
+/* Mantém a faixa de identificação nos cards específicos desta tela. */
+.variable-vt-card{border-left:3px solid #b99555}.variable-quick{border-left:3px solid #69b879}.variable-list-card{border-left:3px solid #dfa72f}
+@media(max-width:900px){.expense-table.variable-modern tr{border-left:3px solid #b99555}}
