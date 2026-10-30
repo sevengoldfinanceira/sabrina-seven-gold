@@ -1,6 +1,6 @@
-function expenseVisibilityMonths(kind,date,paidDate,sourceMonth){
+function expenseVisibilityMonths(kind,date,dueDate,paidDate,sourceMonth){
  if(kind!=='variable')return [sourceMonth];
- return [...new Set([date.slice(0,7),paidDate?.slice(0,7)].filter(Boolean))];
+ return [...new Set([date?.slice(0,7),dueDate?.slice(0,7),paidDate?.slice(0,7)].filter(Boolean))];
 }
 
 function variableExpenseCopies(id){
@@ -23,7 +23,7 @@ function storeExpenseAcrossMonths(entry,sourceMonth){
   if(!Array.isArray(company?.items))continue;
   company.items=company.items.filter(item=>item.id!==entry.id);
  }
- const months=expenseVisibilityMonths(entry.kind,entry.date,entry.paidDate,sourceMonth);
+ const months=expenseVisibilityMonths(entry.kind,entry.date,entry.dueDate,entry.paidDate,sourceMonth);
  for(const month of months)companyMonth(month).items.push({...entry});
  return months;
 }
@@ -41,7 +41,7 @@ function syncVariableExpenseVisibility(){
  for(const copies of groups.values()){
   const purchaseMonth=copies[0].entry.date?.slice(0,7);
   const canonical=copies.find(copy=>copy.month===purchaseMonth)||copies[0];
-  const desired=expenseVisibilityMonths(canonical.entry.kind,canonical.entry.date,canonical.entry.paidDate,canonical.month).sort();
+  const desired=expenseVisibilityMonths(canonical.entry.kind,canonical.entry.date,canonical.entry.dueDate,canonical.entry.paidDate,canonical.month).sort();
   const present=copies.map(copy=>copy.month).sort();
   const signature=JSON.stringify(canonical.entry);
   if(desired.join(',')===present.join(',')&&copies.every(copy=>JSON.stringify(copy.entry)===signature))continue;
@@ -57,14 +57,15 @@ function syncVariableExpenseVisibility(){
   event.preventDefault();
   const form=event.target;
   if(!form.reportValidity()||!expenseContext)return;
-  const ctx=expenseContext,date=form.elements.date.value,paidDate=form.elements.paidDate.value||null,name=form.elements.name.value.trim();
-  if(!name||!validDate(date)||(paidDate&&!validDate(paidDate)))return;
+  const ctx=expenseContext,date=form.elements.date.value,dueDate=form.elements.dueDate?.value||null,paidDate=form.elements.paidDate.value||null,name=form.elements.name.value.trim();
+  if(!name||!validDate(date)||(dueDate&&!validDate(dueDate))||(paidDate&&!validDate(paidDate)))return;
   const prior=companyMonth(ctx.month).items.find(item=>item.id===ctx.id),kind=prior?.kind||ctx.kind||'variable';
   if(kind==='fixed'&&date.slice(0,7)!==ctx.month){toast('Escolha um vencimento dentro do mês selecionado.');return;}
-  const entry={id:ctx.id||crypto.randomUUID(),kind,name,amount:parseCredit(form.elements.amount.value),date,paidDate,fees:paidDate?(prior?.fees||0):0,voided:false};
+  if(kind==='variable'&&!dueDate){toast('Informe a data de vencimento.');return;}
+  const entry={id:ctx.id||crypto.randomUUID(),kind,name,amount:parseCredit(form.elements.amount.value),date,dueDate:kind==='variable'?dueDate:null,paidDate,fees:paidDate?(prior?.fees||0):0,voided:false};
   const months=storeExpenseAcrossMonths(entry,ctx.month);
   save();render();document.querySelector('#expense-dialog').close();
-  toast(months.length>1?'Gasto exibido nos meses da compra e do pagamento':'Gasto salvo');
+  toast(months.length>1?'Gasto exibido nos meses da compra, vencimento e pagamento':'Gasto salvo');
  };
 
  const paymentForm=document.querySelector('#expense-payment-form');
@@ -81,7 +82,7 @@ function syncVariableExpenseVisibility(){
   entry.fees=parseCredit(form.elements.fees.value);
   const months=storeExpenseAcrossMonths(entry,sourceMonth);
   save();render();document.querySelector('#expense-payment-dialog').close();
-  toast(months.length>1?'Gasto exibido nos meses da compra e do pagamento':'Pagamento registrado com data');
+  toast(months.length>1?'Gasto exibido nos meses da compra, vencimento e pagamento':'Pagamento registrado com data');
  };
 
  document.querySelector('#unpay-expense').onclick=()=>{
@@ -112,7 +113,8 @@ function syncVariableExpenseVisibility(){
    const ids=new Set();
    for(const expense of company.items){
     const dateIsValid=expense&&expense.date===null||expense&&validDate(expense.date)&&(expense.kind==='variable'||expense.date.slice(0,7)===month);
-    if(!expense||typeof expense.id!=='string'||!expense.id||ids.has(expense.id)||typeof expense.name!=='string'||!expense.name.trim()||!['fixed','variable'].includes(expense.kind)||!(expense.amount===null||Number.isSafeInteger(expense.amount)&&expense.amount>=0)||!dateIsValid||!(expense.paidDate===null||validDate(expense.paidDate))||typeof expense.voided!=='boolean'||!(expense.fees===undefined||Number.isSafeInteger(expense.fees)&&expense.fees>=0))throw Error('Gasto inválido');
+    const dueDateIsValid=expense&&(expense.dueDate===undefined||expense.dueDate===null||validDate(expense.dueDate));
+    if(!expense||typeof expense.id!=='string'||!expense.id||ids.has(expense.id)||typeof expense.name!=='string'||!expense.name.trim()||!['fixed','variable'].includes(expense.kind)||!(expense.amount===null||Number.isSafeInteger(expense.amount)&&expense.amount>=0)||!dateIsValid||!dueDateIsValid||!(expense.paidDate===null||validDate(expense.paidDate))||typeof expense.voided!=='boolean'||!(expense.fees===undefined||Number.isSafeInteger(expense.fees)&&expense.fees>=0))throw Error('Gasto inválido');
     ids.add(expense.id);
    }
   }
