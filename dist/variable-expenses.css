@@ -110,4 +110,8 @@
 
 /* A navegação deve permanecer visível quando o painel Variados é reconstruído. */
 .variable-expenses-head>.company-expense-tabs{display:inline-flex!important;visibility:visible!important;opacity:1!important;margin:0}
-@media(max-width:700px){.variable-expenses-head>.company-expense-tabs{display:grid!important;grid-template-columns:1fr 1fr;width:100%}}
+.variable-expenses-head{width:100%;align-items:flex-end;justify-content:space-between}
+.variable-expense-header-actions{display:flex;align-items:flex-end;gap:9px;margin-left:auto}
+.variable-expense-header-actions .month-control{min-width:155px}
+.variable-expense-header-actions .month-control input{width:155px}
+@media(max-width:700px){.variable-expenses-head{align-items:stretch;flex-direction:column}.variable-expenses-head>.company-expense-tabs{display:grid!important;grid-template-columns:1fr 1fr;width:100%}.variable-expense-header-actions{width:100%;margin-left:0}.variable-expense-header-actions .month-control{flex:1}.variable-expense-header-actions .month-control input{width:100%}}
