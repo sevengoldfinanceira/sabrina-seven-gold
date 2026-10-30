@@ -1,16 +1,54 @@
-function expenseDestinationMonth(kind,date,paidDate,sourceMonth){
- if(kind!=='variable')return sourceMonth;
- return (paidDate||date).slice(0,7);
+function expenseVisibilityMonths(kind,date,paidDate,sourceMonth){
+ if(kind!=='variable')return [sourceMonth];
+ return [...new Set([date.slice(0,7),paidDate?.slice(0,7)].filter(Boolean))];
 }
 
-function storeExpenseInMonth(entry,sourceMonth,targetMonth){
- const source=companyMonth(sourceMonth);
- const sourceIndex=source.items.findIndex(item=>item.id===entry.id);
- if(sourceIndex>=0)source.items.splice(sourceIndex,1);
- const target=companyMonth(targetMonth);
- const targetIndex=target.items.findIndex(item=>item.id===entry.id);
- if(targetIndex>=0)target.items[targetIndex]=entry;
- else target.items.push(entry);
+function variableExpenseCopies(id){
+ const copies=[];
+ for(const [month,company] of Object.entries(state.company||{})){
+  const entry=company?.items?.find(item=>item.id===id&&item.kind==='variable');
+  if(entry)copies.push({month,entry});
+ }
+ return copies;
+}
+
+function storeExpenseAcrossMonths(entry,sourceMonth){
+ if(entry.kind!=='variable'){
+  const company=companyMonth(sourceMonth),index=company.items.findIndex(item=>item.id===entry.id);
+  if(index>=0)company.items[index]=entry;
+  else company.items.push(entry);
+  return [sourceMonth];
+ }
+ for(const company of Object.values(state.company||{})){
+  if(!Array.isArray(company?.items))continue;
+  company.items=company.items.filter(item=>item.id!==entry.id);
+ }
+ const months=expenseVisibilityMonths(entry.kind,entry.date,entry.paidDate,sourceMonth);
+ for(const month of months)companyMonth(month).items.push({...entry});
+ return months;
+}
+
+function syncVariableExpenseVisibility(){
+ const groups=new Map();
+ for(const [month,company] of Object.entries(state.company||{})){
+  for(const entry of company?.items||[]){
+   if(entry.kind!=='variable')continue;
+   if(!groups.has(entry.id))groups.set(entry.id,[]);
+   groups.get(entry.id).push({month,entry});
+  }
+ }
+ let changed=false;
+ for(const copies of groups.values()){
+  const purchaseMonth=copies[0].entry.date?.slice(0,7);
+  const canonical=copies.find(copy=>copy.month===purchaseMonth)||copies[0];
+  const desired=expenseVisibilityMonths(canonical.entry.kind,canonical.entry.date,canonical.entry.paidDate,canonical.month).sort();
+  const present=copies.map(copy=>copy.month).sort();
+  const signature=JSON.stringify(canonical.entry);
+  if(desired.join(',')===present.join(',')&&copies.every(copy=>JSON.stringify(copy.entry)===signature))continue;
+  storeExpenseAcrossMonths({...canonical.entry},canonical.month);
+  changed=true;
+ }
+ return changed;
 }
 
 (()=>{
@@ -21,13 +59,12 @@ function storeExpenseInMonth(entry,sourceMonth,targetMonth){
   if(!form.reportValidity()||!expenseContext)return;
   const ctx=expenseContext,date=form.elements.date.value,paidDate=form.elements.paidDate.value||null,name=form.elements.name.value.trim();
   if(!name||!validDate(date)||(paidDate&&!validDate(paidDate)))return;
-  const source=companyMonth(ctx.month),prior=source.items.find(item=>item.id===ctx.id),kind=prior?.kind||ctx.kind||'variable';
+  const prior=companyMonth(ctx.month).items.find(item=>item.id===ctx.id),kind=prior?.kind||ctx.kind||'variable';
   if(kind==='fixed'&&date.slice(0,7)!==ctx.month){toast('Escolha um vencimento dentro do mês selecionado.');return;}
   const entry={id:ctx.id||crypto.randomUUID(),kind,name,amount:parseCredit(form.elements.amount.value),date,paidDate,fees:paidDate?(prior?.fees||0):0,voided:false};
-  const targetMonth=expenseDestinationMonth(kind,date,paidDate,ctx.month);
-  storeExpenseInMonth(entry,ctx.month,targetMonth);
+  const months=storeExpenseAcrossMonths(entry,ctx.month);
   save();render();document.querySelector('#expense-dialog').close();
-  toast(targetMonth===ctx.month?'Gasto salvo':'Gasto movido para o mês da data de pagamento');
+  toast(months.length>1?'Gasto exibido nos meses da compra e do pagamento':'Gasto salvo');
  };
 
  const paymentForm=document.querySelector('#expense-payment-form');
@@ -42,11 +79,30 @@ function storeExpenseInMonth(entry,sourceMonth,targetMonth){
   if(!entry)return;
   entry.paidDate=paidDate;
   entry.fees=parseCredit(form.elements.fees.value);
-  const targetMonth=expenseDestinationMonth(entry.kind,entry.date,paidDate,sourceMonth);
-  storeExpenseInMonth(entry,sourceMonth,targetMonth);
+  const months=storeExpenseAcrossMonths(entry,sourceMonth);
   save();render();document.querySelector('#expense-payment-dialog').close();
-  toast(targetMonth===sourceMonth?'Pagamento registrado com data':'Gasto movido para o mês da data de pagamento');
+  toast(months.length>1?'Gasto exibido nos meses da compra e do pagamento':'Pagamento registrado com data');
  };
+
+ document.querySelector('#unpay-expense').onclick=()=>{
+  if(!expensePaymentContext)return;
+  const sourceMonth=expensePaymentContext.month;
+  const entry=companyMonth(sourceMonth).items.find(item=>item.id===expensePaymentContext.id);
+  if(!entry)return;
+  entry.paidDate=null;
+  entry.fees=0;
+  storeExpenseAcrossMonths(entry,sourceMonth);
+  save();render();document.querySelector('#expense-payment-dialog').close();toast('Pagamento removido');
+ };
+
+ document.addEventListener('click',event=>{
+  const button=event.target.closest('[data-expense-void]');
+  if(!button)return;
+  const current=companyMonth().items.find(item=>item.id===button.dataset.expenseVoid);
+  if(!current||current.kind!=='variable')return;
+  for(const copy of variableExpenseCopies(current.id))copy.entry.voided=current.voided;
+  save();render();
+ });
 
  validateCompany=function(data){
   if(data.company===undefined)return;
@@ -55,10 +111,16 @@ function storeExpenseInMonth(entry,sourceMonth,targetMonth){
    if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(month)||!company||!(company.revenue===null||Number.isSafeInteger(company.revenue)&&company.revenue>=0)||!(company.taxRate===undefined||Number.isFinite(company.taxRate)&&company.taxRate>=0&&company.taxRate<=100)||!Array.isArray(company.items))throw Error('Mês inválido');
    const ids=new Set();
    for(const expense of company.items){
-    const dateIsValid=expense.date===null||validDate(expense.date)&&(expense.kind==='variable'||expense.date.slice(0,7)===month);
+    const dateIsValid=expense&&expense.date===null||expense&&validDate(expense.date)&&(expense.kind==='variable'||expense.date.slice(0,7)===month);
     if(!expense||typeof expense.id!=='string'||!expense.id||ids.has(expense.id)||typeof expense.name!=='string'||!expense.name.trim()||!['fixed','variable'].includes(expense.kind)||!(expense.amount===null||Number.isSafeInteger(expense.amount)&&expense.amount>=0)||!dateIsValid||!(expense.paidDate===null||validDate(expense.paidDate))||typeof expense.voided!=='boolean'||!(expense.fees===undefined||Number.isSafeInteger(expense.fees)&&expense.fees>=0))throw Error('Gasto inválido');
     ids.add(expense.id);
    }
   }
+ };
+
+ const renderCompanyWithExpenseVisibility=renderCompany;
+ renderCompany=function(){
+  if(syncVariableExpenseVisibility())save();
+  renderCompanyWithExpenseVisibility();
  };
 })();
