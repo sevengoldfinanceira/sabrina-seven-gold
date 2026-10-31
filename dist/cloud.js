@@ -54,7 +54,7 @@ async function loadCloudState(user){
   const {data,error}=await cloud.from('app_state').select('data').eq('user_id',user.id).maybeSingle();
   if(error){cloudLoading=false;showApp();ensureLogout();setCloudStatus('Dados locais · falha ao carregar on-line');toast('Não foi possível carregar o Supabase. Os dados locais foram preservados.');return;}
   if(data?.data){
-    try{state=validate(data.data);selected=state.people[0]?.id||null;localSave();}
+    try{state=validate(data.data);migratePersonFares();selected=state.people[0]?.id||null;localSave();}
     catch{cloudLoading=false;showApp();ensureLogout();setCloudStatus('Dados locais · conteúdo on-line inválido');toast('Os dados on-line não passaram na validação. O backup local foi preservado.');return;}
   }
   cloudLoading=false;showApp();ensureLogout();render();
