@@ -38,6 +38,10 @@ function reorderFixedExpense(sourceId,targetId,after){
  }
 
  root.addEventListener('dragstart',event=>{
+  if(event.target.closest('button,summary,details,input,select,a')){
+   event.preventDefault();
+   return;
+  }
   const row=event.target.closest('[data-fixed-expense-id]');
   if(!row)return;
   draggedId=row.dataset.fixedExpenseId;

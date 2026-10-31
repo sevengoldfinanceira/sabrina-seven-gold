@@ -4,6 +4,9 @@
 .monthly-expenses .expense-table.modern tr.expense-drop-before{box-shadow:inset 0 3px #c89436,0 8px 18px #00000014}
 .monthly-expenses .expense-table.modern tr.expense-drop-after{box-shadow:inset 0 -3px #c89436,0 8px 18px #00000014}
 .monthly-expenses .expense-table.modern td:first-child{position:relative;padding-right:26px!important}
+.monthly-expenses .expense-table.modern tr:has(.expense-menu[open]){z-index:100;overflow:visible}
+.monthly-expenses .expense-table.modern tr:has(.expense-menu[open]) .expense-menu{z-index:101}
+.monthly-expenses .expense-table.modern tr:has(.expense-menu[open]) .expense-menu>div{z-index:102;pointer-events:auto}
 .expense-drag-handle{position:absolute;top:0;right:0;display:grid;place-items:center;width:22px;height:22px;border-radius:6px;color:#9a7840;font-size:17px;line-height:1;cursor:grab;user-select:none}
 .expense-drag-handle:hover{background:#f4ead8;color:#6f4c16}
 @media(max-width:700px){.expense-drag-handle{width:30px;height:30px;font-size:20px}}
