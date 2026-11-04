@@ -238,6 +238,9 @@ assert.equal(vm.runInContext('representativeReceiptsView(state.saleEntries).incl
 assert.equal(vm.runInContext('validate(JSON.parse(JSON.stringify(state))).companyCommissionPayments.length',context),2,'Backup preserves company receipts');
 vm.runInContext('state.companyCommissionPayments[1].voided=true',context);
 assert.equal(vm.runInContext('representativeBalance(state.saleEntries[0])',context),250000,'Voiding a receipt restores the pending balance');
+vm.runInContext(`const salesBeforeDateOrder=state.saleEntries;state.saleEntries=[{id:'late',date:'2027-06-30'},{id:'early-a',date:'2027-06-05'},{id:'middle',date:'2027-06-17'},{id:'early-b',date:'2027-06-05'}];`,context);
+assert.equal(vm.runInContext(`monthlySales().map(s=>s.id).join(',')`,context),'early-a,early-b,middle,late','Monthly sales are chronological and preserve registration order on the same day');
+vm.runInContext('state.saleEntries=salesBeforeDateOrder',context);
 assert.throws(()=>vm.runInContext('validateSales({...state,companyCommissionPayments:[{id:"bad",saleId:"missing",date:"2027-06-12",amount:1,voided:false}]})',context));
 assert.throws(()=>vm.runInContext('validateSales({...state,saleEntries:[{...sale,installments:13}]})',context));
 assert.throws(()=>vm.runInContext('validateSales({...state,saleEntries:[{...sale,voidedDate:"2027-02-30"}]})',context));
