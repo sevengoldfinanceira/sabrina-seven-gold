@@ -2,7 +2,7 @@ const SUPABASE_URL='https://xglgqvkamphjhxjzwanz.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_u0L4aaSphKEIUiyal64R4w_WVbn7FJG';
 const cloud=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const localSave=save;
-let cloudUser=null,cloudLoading=true,cloudSaveTimer=null,cloudSaving=false,cloudQueued=false;
+let cloudUser=null,cloudLoading=true,cloudSaveTimer=null,cloudSaving=false,cloudQueued=false,cloudWritePromise=null,cloudUpdatedAt='';
 let cloudChannel=null,cloudPollTimer=null,cloudPulseTimer=null,cloudListenersReady=false;
 
 function setCloudStatus(message){const el=$('#save-status');if(el)el.textContent=message;}
@@ -23,8 +23,9 @@ function pulseCloudRefresh(){
   cloudPulseTimer=setTimeout(()=>document.body.classList.remove('cloud-refreshing'),480);
 }
 
-function applyCloudState(data,{notify=true}={}){
+function applyCloudState(data,{notify=true,updatedAt=''}={}){
   if(!data||hasPendingCloudWrite())return false;
+  if(updatedAt&&cloudUpdatedAt&&updatedAt<=cloudUpdatedAt)return false;
   try{
     const next=validate(JSON.parse(JSON.stringify(data)));
     if(stableFingerprint(next)===stableFingerprint(state))return false;
@@ -33,6 +34,7 @@ function applyCloudState(data,{notify=true}={}){
     migratePersonFares();
     selected=state.people.some(person=>person.id===previousSelected)?previousSelected:(state.people[0]?.id||null);
     localSave();
+    if(updatedAt)cloudUpdatedAt=updatedAt;
     render();
     setCloudStatus('✓ Atualizado agora');
     pulseCloudRefresh();
@@ -47,9 +49,9 @@ function applyCloudState(data,{notify=true}={}){
 async function pullCloudState({notify=true}={}){
   if(!cloudUser||cloudLoading||hasPendingCloudWrite())return;
   const userId=cloudUser.id;
-  const {data,error}=await cloud.from('app_state').select('data').eq('user_id',userId).maybeSingle();
+  const {data,error}=await cloud.from('app_state').select('data,updated_at').eq('user_id',userId).maybeSingle();
   if(error||cloudUser?.id!==userId)return;
-  if(data?.data)applyCloudState(data.data,{notify});
+  if(data?.data)applyCloudState(data.data,{notify,updatedAt:data.updated_at||''});
 }
 
 function stopCloudLiveSync(){
@@ -61,7 +63,7 @@ function startCloudLiveSync(user){
   stopCloudLiveSync();
   cloudChannel=cloud.channel(`app-state-${user.id}`)
     .on('postgres_changes',{event:'*',schema:'public',table:'app_state',filter:`user_id=eq.${user.id}`},payload=>{
-      if(payload.new?.data)applyCloudState(payload.new.data);
+      if(payload.new?.data)applyCloudState(payload.new.data,{updatedAt:payload.new.updated_at||''});
     })
     .subscribe();
   // A consulta periódica mantém a atualização funcionando mesmo quando o Realtime
@@ -86,19 +88,32 @@ function queueCloudSave(){
 }
 
 async function pushCloudState(){
-  if(!cloudUser||cloudLoading)return;
-  if(cloudSaving){cloudQueued=true;return;}
+  if(!cloudUser||cloudLoading)return true;
+  if(cloudSaving){cloudQueued=true;return cloudWritePromise;}
   clearTimeout(cloudSaveTimer);cloudSaveTimer=null;
   cloudSaving=true;
   const snapshot=JSON.parse(JSON.stringify(state));
-  const {error}=await cloud.from('app_state').upsert({user_id:cloudUser.id,data:snapshot,updated_at:new Date().toISOString()},{onConflict:'user_id'});
-  cloudSaving=false;
-  if(error){setCloudStatus('Salvo neste navegador · falha na sincronização');toast('Não foi possível sincronizar agora. O backup local foi mantido.');}
-  else{setCloudStatus('✓ Sincronizado on-line');pulseCloudRefresh();}
-  if(cloudQueued){cloudQueued=false;pushCloudState();}
+  const updatedAt=new Date().toISOString();
+  cloudWritePromise=(async()=>{
+    let error=null;
+    try{({error}=await cloud.from('app_state').upsert({user_id:cloudUser.id,data:snapshot,updated_at:updatedAt},{onConflict:'user_id'}));}
+    catch(cause){error=cause;}
+    cloudSaving=false;
+    if(error){setCloudStatus('Salvo neste navegador · falha na sincronização');toast('Não foi possível sincronizar agora. O backup local foi mantido.');}
+    else{cloudUpdatedAt=updatedAt;setCloudStatus('✓ Sincronizado on-line');pulseCloudRefresh();}
+    if(cloudQueued){cloudQueued=false;return pushCloudState();}
+    return !error;
+  })();
+  return cloudWritePromise;
 }
 
 save=function(){const ok=localSave();queueCloudSave();return ok;};
+async function saveAndSync(){
+  const ok=localSave();
+  if(!ok)return false;
+  clearTimeout(cloudSaveTimer);cloudSaveTimer=null;
+  return pushCloudState();
+}
 
 function ensureAuthUI(){
   if($('#cloud-login'))return;
@@ -124,10 +139,10 @@ function ensureLogout(){
 
 async function loadCloudState(user){
   cloudUser=user;cloudLoading=true;setCloudStatus('Carregando dados on-line…');
-  const {data,error}=await cloud.from('app_state').select('data').eq('user_id',user.id).maybeSingle();
+  const {data,error}=await cloud.from('app_state').select('data,updated_at').eq('user_id',user.id).maybeSingle();
   if(error){cloudLoading=false;showApp();ensureLogout();startCloudLiveSync(user);setCloudStatus('Dados locais · tentando reconectar');toast('Não foi possível carregar o Supabase agora. O sistema tentará novamente automaticamente.');return;}
   if(data?.data){
-    try{state=validate(data.data);migratePersonFares();selected=state.people[0]?.id||null;localSave();}
+    try{state=validate(data.data);cloudUpdatedAt=data.updated_at||'';migratePersonFares();selected=state.people[0]?.id||null;localSave();}
     catch{cloudLoading=false;showApp();ensureLogout();startCloudLiveSync(user);setCloudStatus('Dados locais · conteúdo on-line inválido');toast('Os dados on-line não passaram na validação. O backup local foi preservado.');return;}
   }
   cloudLoading=false;showApp();ensureLogout();render();startCloudLiveSync(user);

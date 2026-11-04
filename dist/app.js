@@ -85,7 +85,7 @@ if(typeof window!=='undefined'){
   setupSidebarLayout();
   const sdk=document.createElement('script');
   sdk.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-  sdk.onload=()=>{const integration=document.createElement('script');integration.src='cloud.js?v=live-sync-20261104';document.body.append(integration);};
+  sdk.onload=()=>{const integration=document.createElement('script');integration.src='cloud.js?v=receipt-sync-20261104';document.body.append(integration);};
   sdk.onerror=()=>{const status=document.querySelector('#save-status');if(status)status.textContent='Dados locais · conexão on-line indisponível';};
   document.head.append(sdk);
 }
