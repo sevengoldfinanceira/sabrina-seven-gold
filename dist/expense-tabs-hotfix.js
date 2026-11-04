@@ -9,7 +9,7 @@
   tabs.setAttribute('role','tablist');
   tabs.setAttribute('aria-label','Tipos de gastos');
   const variable=section.querySelector('[data-expense-panel="variable"]:not([hidden])');
-  tabs.innerHTML=`<button type="button" role="tab" data-company-expense-tab="fixed" aria-selected="${!variable}" class="${variable?'':'selected'}">Mensais fixos</button><button type="button" role="tab" data-company-expense-tab="variable" aria-selected="${!!variable}" class="${variable?'selected':''}">Variados</button>`;
+  tabs.innerHTML=typeof companyExpenseTabsMarkup==='function'?companyExpenseTabsMarkup(variable?'variable':'fixed'):`<button type="button" role="tab" data-company-expense-tab="fixed" aria-selected="${!variable}" class="${variable?'':'selected'}">Mensais fixos</button><button type="button" role="tab" data-company-expense-tab="variable" aria-selected="${!!variable}" class="${variable?'selected':''}">Variados</button>`;
   slot.replaceWith(tabs);
  }
  new MutationObserver(ensureExpenseTabs).observe(document.documentElement,{childList:true,subtree:true});

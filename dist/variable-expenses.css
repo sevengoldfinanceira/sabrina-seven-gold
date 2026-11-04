@@ -6,6 +6,9 @@
 .company-expense-tabs{display:inline-flex;justify-self:start;gap:4px;padding:4px;background:#eeece6;border-radius:12px}
 .company-expense-tabs button{min-width:150px;border:0;background:transparent;font-weight:700;color:#60655f}
 .company-expense-tabs button.selected{background:#fff;color:#9a7025;border:1px solid #dfbd78;box-shadow:0 2px 7px #2b241512}
+.company-expense-tabs button{display:grid;place-items:center;gap:2px;line-height:1.15}
+.company-expense-tabs button small{display:block;color:#747871;font-size:10px;font-weight:600;white-space:nowrap}
+.company-expense-tabs button.selected small{color:#8a6425}
 .variable-vt-card{display:grid;grid-template-columns:minmax(280px,1.15fr) minmax(520px,2fr);align-items:center;gap:28px;padding:24px 26px;background:#fff;border:1px solid #e5d9c3;border-radius:14px;box-shadow:0 3px 14px #32261308}
 .variable-vt-title{display:flex;align-items:center;gap:18px}
 .variable-vt-icon{width:76px;height:76px;display:grid;place-items:center;flex:none;border-radius:16px;background:#f7f0e3;color:#b98a36;font-size:0}

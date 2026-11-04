@@ -10,7 +10,7 @@
    tabs.className='company-expense-tabs';
    tabs.setAttribute('role','tablist');
    tabs.setAttribute('aria-label','Tipos de gastos');
-   tabs.innerHTML='<button type="button" role="tab" data-company-expense-tab="fixed" aria-selected="false">Mensais fixos</button><button type="button" role="tab" data-company-expense-tab="variable" aria-selected="true" class="selected">Variados</button>';
+   tabs.innerHTML=typeof companyExpenseTabsMarkup==='function'?companyExpenseTabsMarkup('variable'):'<button type="button" role="tab" data-company-expense-tab="fixed" aria-selected="false">Mensais fixos</button><button type="button" role="tab" data-company-expense-tab="variable" aria-selected="true" class="selected">Variados</button>';
   }
   const heading=header.querySelector(':scope>div>h2');
   if(heading)heading.parentElement.remove();
