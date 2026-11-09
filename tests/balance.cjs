@@ -234,7 +234,11 @@ vm.runInContext(`state.companyCommissionPayments.push({id:'receipt-1',saleId:'co
 assert.equal(vm.runInContext('representativeBalance(state.saleEntries[0])',context),250000,'Partial receipt leaves its exact balance for another week');
 vm.runInContext(`state.companyCommissionPayments.push({id:'receipt-2',saleId:'company-receipt-sale',date:'2027-06-19',amount:250000,voided:false})`,context);
 assert.equal(vm.runInContext('representativeBalance(state.saleEntries[0])',context),0,'Later receipt completes the sale commission');
-assert.equal(vm.runInContext('representativeReceiptsView(state.saleEntries).includes("Histórico de recebimentos")',context),true,'Receipt tab includes weekly history');
+vm.runInContext(`state.saleEntries.push({...state.saleEntries[0],id:'pending-company-sale',client:'Venda pendente anterior',date:'2027-06-01'})`,context);
+assert.equal(vm.runInContext(`(()=>{const html=representativeReceiptsView(state.saleEntries);return html.indexOf('Cliente recebimento')<html.indexOf('Venda pendente anterior')})()`,context),true,'Fully received sales appear before pending sales');
+assert.equal(vm.runInContext(`representativeReceiptsView(state.saleEntries).includes('Histórico de recebimentos')`,context),false,'Receipt history is merged into the main table');
+assert.equal(vm.runInContext(`representativeReceiptsView(state.saleEntries).includes('data-void-company-receipt')`,context),true,'Receipt reversal remains available in the main table');
+vm.runInContext(`state.saleEntries.pop()`,context);
 assert.equal(vm.runInContext('validate(JSON.parse(JSON.stringify(state))).companyCommissionPayments.length',context),2,'Backup preserves company receipts');
 vm.runInContext('state.companyCommissionPayments[1].voided=true',context);
 assert.equal(vm.runInContext('representativeBalance(state.saleEntries[0])',context),250000,'Voiding a receipt restores the pending balance');
