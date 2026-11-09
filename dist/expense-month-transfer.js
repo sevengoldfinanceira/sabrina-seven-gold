@@ -1,5 +1,5 @@
 function expenseVisibilityMonths(kind,date,dueDate,paidDate,sourceMonth){
- if(kind!=='variable')return [sourceMonth];
+ if(kind!=='variable')return [paidDate?.slice(0,7)||date?.slice(0,7)||sourceMonth];
  return [...new Set([date?.slice(0,7),dueDate?.slice(0,7),paidDate?.slice(0,7)].filter(Boolean))];
 }
 
@@ -14,10 +14,15 @@ function variableExpenseCopies(id){
 
 function storeExpenseAcrossMonths(entry,sourceMonth){
  if(entry.kind!=='variable'){
-  const company=companyMonth(sourceMonth),index=company.items.findIndex(item=>item.id===entry.id);
-  if(index>=0)company.items[index]=entry;
-  else company.items.push(entry);
-  return [sourceMonth];
+  const targetMonth=expenseVisibilityMonths(entry.kind,entry.date,entry.dueDate,entry.paidDate,sourceMonth)[0];
+  const source=companyMonth(sourceMonth);
+  if(targetMonth!==sourceMonth)source.items=source.items.filter(item=>item.id!==entry.id);
+  const target=companyMonth(targetMonth);
+  let index=target.items.findIndex(item=>item.id===entry.id);
+  if(index>=0&&targetMonth!==sourceMonth){entry={...entry,id:entry.id+'@'+sourceMonth};index=-1;}
+  if(index>=0)target.items[index]=entry;
+  else target.items.push(entry);
+  return [targetMonth];
  }
  for(const company of Object.values(state.company||{})){
   if(!Array.isArray(company?.items))continue;
@@ -60,7 +65,6 @@ function syncVariableExpenseVisibility(){
   const ctx=expenseContext,date=form.elements.date.value,dueDate=form.elements.dueDate?.value||null,paidDate=form.elements.paidDate.value||null,name=form.elements.name.value.trim();
   if(!name||!validDate(date)||(dueDate&&!validDate(dueDate))||(paidDate&&!validDate(paidDate)))return;
   const prior=companyMonth(ctx.month).items.find(item=>item.id===ctx.id),kind=prior?.kind||ctx.kind||'variable';
-  if(kind==='fixed'&&date.slice(0,7)!==ctx.month){toast('Escolha um vencimento dentro do mês selecionado.');return;}
   if(kind==='variable'&&!dueDate){toast('Informe a data de vencimento.');return;}
   const entry={id:ctx.id||crypto.randomUUID(),kind,name,amount:parseCredit(form.elements.amount.value),date,dueDate:kind==='variable'?dueDate:null,paidDate,fees:paidDate?(prior?.fees||0):0,voided:false};
   const months=storeExpenseAcrossMonths(entry,ctx.month);
@@ -112,7 +116,7 @@ function syncVariableExpenseVisibility(){
    if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(month)||!company||!(company.revenue===null||Number.isSafeInteger(company.revenue)&&company.revenue>=0)||!(company.taxRate===undefined||Number.isFinite(company.taxRate)&&company.taxRate>=0&&company.taxRate<=100)||!Array.isArray(company.items))throw Error('Mês inválido');
    const ids=new Set();
    for(const expense of company.items){
-    const dateIsValid=expense&&expense.date===null||expense&&validDate(expense.date)&&(expense.kind==='variable'||expense.date.slice(0,7)===month);
+    const dateIsValid=expense&&(expense.date===null||validDate(expense.date));
     const dueDateIsValid=expense&&(expense.dueDate===undefined||expense.dueDate===null||validDate(expense.dueDate));
     if(!expense||typeof expense.id!=='string'||!expense.id||ids.has(expense.id)||typeof expense.name!=='string'||!expense.name.trim()||!['fixed','variable'].includes(expense.kind)||!(expense.amount===null||Number.isSafeInteger(expense.amount)&&expense.amount>=0)||!dateIsValid||!dueDateIsValid||!(expense.paidDate===null||validDate(expense.paidDate))||typeof expense.voided!=='boolean'||!(expense.fees===undefined||Number.isSafeInteger(expense.fees)&&expense.fees>=0))throw Error('Gasto inválido');
     ids.add(expense.id);

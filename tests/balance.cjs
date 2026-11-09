@@ -307,7 +307,12 @@ assert.equal(vm.runInContext('unconfirmed.afterPending',context),vm.runInContext
 assert.equal(vm.runInContext('unconfirmed.vtPending',context),500);
 console.log('PASS: paid expense moves between columns once; unconfirmed VT never reduces balances');
 assert.equal(vm.runInContext("expenseVisibilityMonths('variable','2027-05-28','2027-06-03','2027-07-04','2027-05').join(',')",context),'2027-05,2027-06,2027-07');
-assert.equal(vm.runInContext("expenseVisibilityMonths('fixed','2027-05-28',null,'2027-06-03','2027-05').join(',')",context),'2027-05');
+assert.equal(vm.runInContext("expenseVisibilityMonths('fixed','2027-05-28',null,'2027-06-03','2027-05').join(',')",context),'2027-06','A paid monthly expense belongs to its payment month');
+assert.equal(vm.runInContext("expenseVisibilityMonths('fixed','2027-06-28',null,null,'2027-05').join(',')",context),'2027-06','An unpaid monthly expense belongs to its due month');
+vm.runInContext(`state.company={'2027-11':{revenue:null,items:[{id:'future-fixed',kind:'fixed',name:'ADM / Pós Venda',amount:243000,date:'2027-12-09',paidDate:'2027-12-09',fees:0,voided:false}]}};storeExpenseAcrossMonths(state.company['2027-11'].items[0],'2027-11');`,context);
+assert.equal(vm.runInContext("companyMonth('2027-11').items.some(item=>item.id==='future-fixed')",context),false,'Future paid expense leaves the selected month');
+assert.equal(vm.runInContext("companyMonth('2027-12').items.some(item=>item.id==='future-fixed')",context),true,'Future paid expense appears in its payment month');
+assert.doesNotThrow(()=>vm.runInContext('validateCompany(state)',context),'Cross-month monthly expense survives validation and reload');
 assert.equal(vm.runInContext("expenseVisibilityMonths('variable','2027-05-28','2027-05-30','2027-05-31','2027-05').join(',')",context),'2027-05','Same-month dates never duplicate the expense');
 vm.runInContext(`state.company={'2027-05':{revenue:null,items:[{id:'moved-variable',kind:'variable',name:'Compra parcelada',amount:25000,date:'2027-05-28',dueDate:'2027-06-03',paidDate:'2027-07-04',fees:0,voided:false}]}};storeExpenseAcrossMonths(state.company['2027-05'].items[0],'2027-05');`,context);
 assert.equal(vm.runInContext("companyMonth('2027-05').items.some(item=>item.id==='moved-variable')",context),true);
